@@ -2,7 +2,7 @@
     "name": "backend-server",
     "version": "1.0.0",
     "description": "Servidor backend",
-    "main": "index.js",
+    "main": "app.js",
     "scripts": {
         "start": "nodemon app.js",
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,8 +12,7 @@
     "dependencies": {
         "body-parser": "^1.18.2",
         "express": "^4.16.2",
-        "mongoose": "^4.13.5",
-        "mongoose-unique-validator": "^1.0.6"
+        "mongoose": "^5.4.8"
     },
     "devDependencies": {
         "nodemon": "^1.18.9"

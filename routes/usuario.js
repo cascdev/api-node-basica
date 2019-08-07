@@ -1,13 +1,18 @@
-var express = require('express');
+const express = require ('express')
+const router = express.Router()
 
-var app = express();
+const Usuario = require('../models/usuario')
 
-var Usuario = require('../models/usuario');
+module.exports = router
+
+// Consertar tudo isto
+
+
 
 // ==========================================
 // Obter todos os usuarios
 // ==========================================
-app.get('/', (req, res, next) => {
+router.get('/', (_req, res) => {
 
     Usuario.find({}, 'nome email img role')
         .exec(
@@ -18,24 +23,24 @@ app.get('/', (req, res, next) => {
                         ok: false,
                         mensagem: 'Error carregando usuario',
                         errors: err
-                    });
+                    })
                 }
 
                 res.status(200).json({
                     ok: true,
                     usuarios: usuarios
-                });
+                })
+            })
 
-            });
-});
+})
 
 // ==========================================
 // Atualizar usuário
 // ==========================================
-app.put('/:id', (req, res) => {
+router.put('/:id', (req, res) => {
 
-    var id = req.params.id;
-    var body = req.body;
+    var id = req.params.id
+    var body = req.body
 
     Usuario.findById(id, (err, usuario) => {
 
@@ -44,18 +49,18 @@ app.put('/:id', (req, res) => {
                 ok: false,
                 mensagem: 'Erro ao buscar usuário',
                 errors: err
-            });
+            })
         }
         if (!usuario) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'O usuario com o id ' + id + ' não existe',
+                mensagem: 'O usuario com o id ' + id + ' não existe',
                 errors: { message: `Não existe um usuário com o ID: ${id}`}
-            });
+            })
         }
-        usuario.nome = body.nome;
-        usuario.email = body.email;
-        usuario.role = body.role;
+        usuario.nome = body.nome
+        usuario.email = body.email
+        usuario.role = body.role
 
         usuario.save((err, usuarioGuardado) => {
 
@@ -64,35 +69,34 @@ app.put('/:id', (req, res) => {
                     ok: false,
                     mensagem: 'Error ao atualizar usuario',
                     errors: err
-                });
+                })
             }
-            usuarioGuardado.password = ':)';
+            usuarioGuardado.password = ':)'
 
             res.status(200).json({
                 ok: true,
                 usuario: usuarioGuardado
-            });
+            })
 
-        });
+        })
 
-    });
+    })
 
-});
+})
 
 // ==========================================
 // Criar um usuário
 // ==========================================
-app.post('/', (req, res) => {
+router.post('/', (req, res) => {
 
-    var body = req.body;
+    let body = req.body
 
-    var usuario = new Usuario({
+    let usuario = new Usuario({
         nome: body.nome,
         email: body.email,
         password: body.password,
-        img: body.img,
-        role: body.role
-    });
+        img: body.img
+    })
     usuario.save((err, usuarioGuardado) => {
 
         if (err) {
@@ -100,48 +104,48 @@ app.post('/', (req, res) => {
                 ok: false,
                 mensagem: 'Erro ao criar usuário',
                 errors: err
-            });
+            })
         }
         res.status(201).json({
             ok: true,
             usuario: usuarioGuardado,
             usuariog: req.usuario
-        });
+        })
 
-    });
+    })
 
-});
+})
 
 // ============================================
 //   Deletar/Excluir um usuário pelo seu id
 // ============================================
-app.delete('/:id',(req, res) => {
+router.delete('/:id',(req, res) => {
 
-    var id = req.params.id;
+    let id = req.params.id
 
-    Usuario.findByIdAndRemove(id, (err, usuarioExcluido) => {
+    User.findByIdAndRemove(id, (err, usuarioExcluido) => {
 
         if (err) {
             return res.status(500).json({
                 ok: false,
                 mensagem: `Erro ao excluir o usuário de ID: ${id}`,
-                errors: err
-            });
+                erros: err
+            })
         }
         if (!usuarioExcluido) {
             return res.status(400).json({
                 ok: false,
                 mensagem: `Não existe um usuário com ID: ${id}`,
-                errors: { message: `Não existe um usuário com ID: ${id}` }
-            });
+                erros: { message: `Não existe um usuário com ID: ${id}` }
+            })
         }
         res.status(200).json({
             ok: true,
             usuario: usuarioExcluido
-        });
+        })
 
-    });
+    })
+})
 
-});
 
-module.exports = app;
+module.exports = router

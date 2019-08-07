@@ -1,33 +1,43 @@
 // Requires
-var express = require('express');
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
+const express = require('express')
+const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
+
 
 // Inicializar variáveis
-var app = express();
+const app = express()
 
-// Body Parser
+// Configurações do Body Parser
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 // Importar rotas
-var appRoutes = require('./routes/app');
-var usuarioRoutes = require('./routes/usuario');
+const appRoutes = require('./routes/app');
+const usuarioRoutes = require('./routes/usuario')
 
-// Conexão com base de dados do mongoose, habilita os models e métodos
-mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB', (err, res) => {
-    
-    if (err) throw err;
-    console.log('Base de dados: \x1b[32m%s\x1b[0m', 'online');
-
-});
 
 // Definir as Rotas que serão usadas na aplicação (As rotas aqui devem estar importadas acima)
-app.use('/usuario', usuarioRoutes);
-app.use('/', appRoutes);
+app.use('/', appRoutes)
+app.use('/usuario', usuarioRoutes) //!!!!!PROBLEMAS COM ESSA ROTA
+
+mongoose.Promise = global.Promise
+mongoose.set('useCreateIndex', true) // unique do models
+// Conexão com base de dados do mongoose, habilita os models e métodos
+mongoose.connect('mongodb://localhost:27017/novaApiBasica',{ useNewUrlParser: true})
+    .then(()=>{
+        console.log('Conectado com sucesso ao MongoDB')   
+        
+    }).catch(err => {
+        console.log('O Banco Mongo NÃO foi conectado.')
+        process.exit()
+      })
+  
 
 // Ouvindo petições ao servidor
-app.listen(3000, () => {
-    console.log('Express server rodando na porta 3000: \x1b[32m%s\x1b[0m', 'online');
-});
+port = 3000
+app.listen(port, () => {
+    console.log(`Express server rodando na porta ${port}: \x1b[32m%s\x1b[0m`, 'online')
+})
+
+  

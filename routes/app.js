@@ -1,16 +1,11 @@
-var express = require('express');
+const express = require ('express')
+const router = express.Router()
 
-var app = express();
+router.get('/', (req, res) => {
 
-app.get('/', (req, res, next) => {
-
-    res.status(200).json({
-        ok: true,
-        mensagem: 'Pedido ao servidor realizado com sucesso!'
-    });
-
+    res.status(200).send(`<h1>Rotas Funcionando</h1>`)
 });
 
-module.exports = app;
+module.exports = router
 
-// Esta rota é apenas o get para a URL base, ou melhor a principal.
+// Esta rota é apenas o get para a URL raiz (localhost:3000).
